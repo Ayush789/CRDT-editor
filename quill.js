@@ -9,10 +9,14 @@ import QuillCursors from 'quill-cursors'
 
 Quill.register('modules/cursors', QuillCursors)
 
+const url = new URL(window.location.href)
+
+const roomid = url.searchParams.get("id") || "global"
+console.log(roomid)
+
 window.addEventListener('load', () => {
   const ydoc = new Y.Doc()
-  // const provider = new WebsocketProvider('wss://demos.yjs.dev', 'ayush', ydoc)
-  var provider = new WebrtcProvider('ayush', ydoc, { 
+  const provider = new WebrtcProvider(roomid, ydoc, { 
           signaling: [
             'wss://y-webrtc-ckynwnzncc.now.sh',
             'wss://localhost:4444'
@@ -46,13 +50,13 @@ window.addEventListener('load', () => {
   connectBtn.addEventListener('click', () => {
     if (provider.shouldConnect) {
       provider.disconnect()
-      // connectBtn.textContent = 'Connect'
+      
       connectBtn.children[0].classList.toggle("fa-link")
       connectBtn.children[0].classList.toggle("fa-chain-broken")
       connectBtn.style.backgroundColor = "#F00"
     } else {
       provider.connect()
-      // connectBtn.textContent = 'Disconnect'
+      
       connectBtn.children[0].classList.toggle("fa-link")
       connectBtn.children[0].classList.toggle("fa-chain-broken")
       connectBtn.style.backgroundColor = "#0C9"
@@ -61,20 +65,13 @@ window.addEventListener('load', () => {
 
   const roomBtn = document.getElementById("y-update-room-btn")
   const roomInput = document.getElementById("roomid")
+  roomInput.setAttribute('value',roomid)
   roomBtn.addEventListener('click',()=>{
     console.log(provider.roomName)
     console.log(roomInput.value)
 
     if(provider.roomName!=roomInput.value){
-      provider.disconnect()
-
-      provider = new WebrtcProvider(roomInput.value, ydoc, { 
-        signaling: [
-          // 'wss://y-webrtc-ckynwnzncc.now.sh',
-          'wss://localhost:4444'
-        ] })
-        currentRoom.innerHTML = provider.roomName
-        console.log(provider.roomName)
+      window.open(window.location.href.split('?')[0]+"?id="+roomInput.value)
     }else{
       console.log("Same room")
     }
