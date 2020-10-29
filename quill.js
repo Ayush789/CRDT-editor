@@ -18,8 +18,7 @@ window.addEventListener('load', () => {
   const ydoc = new Y.Doc()
   const provider = new WebrtcProvider(roomid, ydoc, { 
           signaling: [
-            'wss://y-webrtc-ckynwnzncc.now.sh',
-            'wss://localhost:4444'
+            'ws://secure-beyond-94007.herokuapp.com:5000/'
           ] })
 
   const type = ydoc.getText('quill')
